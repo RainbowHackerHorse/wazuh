@@ -46,7 +46,9 @@ void wm_check() {
             next = j->next;
 
             if (i->context->name == j->context->name) {
-                j->context->destroy(j->data);
+                if (j->context->destroy)
+                    j->context->destroy(j->data);
+
                 free(j);
 
                 if (j == wmodules)
@@ -64,7 +66,10 @@ void wm_destroy() {
 
     for (cur_module = wmodules; cur_module; cur_module = next_module) {
         next_module = cur_module->next;
-        cur_module->context->destroy(cur_module->data);
+
+        if (cur_module->context->destroy)
+            cur_module->context->destroy(cur_module->data);
+
         free(cur_module);
     }
 }
